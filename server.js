@@ -40,14 +40,16 @@ var typeorm_1 = require("typeorm");
 var Bicycle_1 = require("./src/entity/Bicycle");
 // import {Bicycle} from "./model/Bicycle";
 // Connections
-var express = require('express');
-var port = 4000;
-var bodyParser = require('body-parser');
 typeorm_1.createConnection().then(function (connection) {
     var bicycleRepository = connection.getRepository(Bicycle_1.Bicycle);
     // create and setup express app
+    var express = require('express');
     var app = express();
+    var port = 4000;
+    var bodyParser = require('body-parser');
     app.use(bodyParser.json());
+    var cors = require('cors');
+    app.use(cors());
     // register routes
     app.get('/get_free_bikes', function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
@@ -75,12 +77,13 @@ typeorm_1.createConnection().then(function (connection) {
                         })];
                     case 1:
                         rentedBikes = _a.sent();
-                        return [2 /*return*/, res.send(rentedBikes)];
+                        res.send(rentedBikes);
+                        return [2 /*return*/];
                 }
             });
         });
     });
-    app.post('/create_bike', function (req, res) {
+    app.post('/create_rent', function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             var newBike, results;
             return __generator(this, function (_a) {
@@ -125,7 +128,7 @@ typeorm_1.createConnection().then(function (connection) {
                         return [4 /*yield*/, bicycleRepository.save(bike)];
                     case 2:
                         results = _a.sent();
-                        return [2 /*return*/, res.send(results)];
+                        return [2 /*return*/, res.status().send(results)];
                 }
             });
         });
@@ -138,7 +141,7 @@ typeorm_1.createConnection().then(function (connection) {
                     case 0: return [4 /*yield*/, bicycleRepository.delete(req.params.id)];
                     case 1:
                         results = _a.sent();
-                        return [2 /*return*/, res.send(results)];
+                        return [2 /*return*/, res.status(204).send(results)];
                 }
             });
         });
