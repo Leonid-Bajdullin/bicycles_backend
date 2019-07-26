@@ -43,21 +43,22 @@ var Bicycle_1 = require("./src/entity/Bicycle");
 typeorm_1.createConnection().then(function (connection) {
     var bicycleRepository = connection.getRepository(Bicycle_1.Bicycle);
     // create and setup express app
-    var express = require('express');
+    var express = require("express");
     var app = express();
     var port = 4000;
-    var bodyParser = require('body-parser');
+    var bodyParser = require("body-parser");
     app.use(bodyParser.json());
-    var cors = require('cors');
+    var cors = require("cors");
     app.use(cors());
     // register routes
-    app.get('/get_free_bikes', function (req, res) {
+    app.get("/get_free_bikes", function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             var freeBikes;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, bicycleRepository.find({
-                            where: { is_rented: false }
+                            where: { is_rented: false },
+                            order: { name: "ASC" }
                         })];
                     case 1:
                         freeBikes = _a.sent();
@@ -67,13 +68,14 @@ typeorm_1.createConnection().then(function (connection) {
             });
         });
     });
-    app.get('/get_rented_bikes', function (req, res) {
+    app.get("/get_rented_bikes", function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             var rentedBikes;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, bicycleRepository.find({
-                            where: { is_rented: true }
+                            where: { is_rented: true },
+                            order: { name: "ASC" }
                         })];
                     case 1:
                         rentedBikes = _a.sent();
@@ -83,7 +85,7 @@ typeorm_1.createConnection().then(function (connection) {
             });
         });
     });
-    app.post('/create_rent', function (req, res) {
+    app.post("/create_rent", function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             var newBike, results;
             return __generator(this, function (_a) {
@@ -99,7 +101,7 @@ typeorm_1.createConnection().then(function (connection) {
             });
         });
     });
-    app.put('/rent_bike/:id', function (req, res) {
+    app.put("/rent_bike/:id", function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             var bike, results;
             return __generator(this, function (_a) {
@@ -116,7 +118,7 @@ typeorm_1.createConnection().then(function (connection) {
             });
         });
     });
-    app.put('/unrent_bike/:id', function (req, res) {
+    app.put("/unrent_bike/:id", function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             var bike, results;
             return __generator(this, function (_a) {
@@ -128,12 +130,12 @@ typeorm_1.createConnection().then(function (connection) {
                         return [4 /*yield*/, bicycleRepository.save(bike)];
                     case 2:
                         results = _a.sent();
-                        return [2 /*return*/, res.status().send(results)];
+                        return [2 /*return*/, res.send(results)];
                 }
             });
         });
     });
-    app.delete('/delete_bike/:id', function (req, res) {
+    app.delete("/delete_bike/:id", function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
             var results;
             return __generator(this, function (_a) {
@@ -141,7 +143,7 @@ typeorm_1.createConnection().then(function (connection) {
                     case 0: return [4 /*yield*/, bicycleRepository.delete(req.params.id)];
                     case 1:
                         results = _a.sent();
-                        return [2 /*return*/, res.status(204).send(results)];
+                        return [2 /*return*/, res.send(results)];
                 }
             });
         });
